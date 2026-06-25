@@ -1,13 +1,8 @@
-from sqlalchemy import String, Text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlmodel import Field, SQLModel
 
-from app.db.session import Base
-
-
-class Case(Base):
+class Case(SQLModel, table=True):
     __tablename__ = "cases"
-
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    title: Mapped[str] = mapped_column(String(120), index=True)
-    description: Mapped[str | None] = mapped_column(Text, nullable=True)
-    status: Mapped[str] = mapped_column(String(32), default="open", index=True)
+    id: int | None = Field(primary_key=True, index=True)
+    title: str = Field()
+    description: str = Field()
+    status: str = Field(default="open", index=True)
