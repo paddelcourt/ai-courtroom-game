@@ -1,0 +1,18 @@
+[project]
+name = "ai-courtroom-game-backend"
+version = "0.1.0"
+description = "FastAPI backend for AI Courtroom Game"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115.0",
+    "pydantic-settings>=2.6.0",
+    "sqlalchemy>=2.0.0",
+    "uvicorn[standard]>=0.30.0",
+]
+
+[tool.ruff]
+line-length = 100
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
