@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from sqlmodel import Session
 
 from app.api.deps import get_db
 from app.schemas.case import CaseCreate, CaseRead
@@ -19,7 +19,7 @@ def create_new_case(payload: CaseCreate, db: Session = Depends(get_db)) -> CaseR
 
 
 @router.get("/{case_id}", response_model=CaseRead)
-def read_case(case_id: int, db: Session = Depends(get_db)) -> CaseRead:
+def read_case(case_id: str, db: Session = Depends(get_db)) -> CaseRead:
     case = get_case(db, case_id)
     if case is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Case not found")

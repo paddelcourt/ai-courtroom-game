@@ -1,9 +1,11 @@
-from app.db.base import Base
+from sqlmodel import SQLModel
+
+import app.db.base
 from app.db.session import engine
 
 
 def init_db() -> None:
-    Base.metadata.create_all(bind=engine)
+    SQLModel.metadata.create_all(engine)
 
 
 if __name__ == "__main__":

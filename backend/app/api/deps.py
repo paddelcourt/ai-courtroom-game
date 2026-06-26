@@ -1,13 +1,10 @@
 from collections.abc import Generator
 
-from sqlalchemy.orm import Session
+from sqlmodel import Session
 
-from app.db.session import SessionLocal
+from app.db.session import get_session
 
 
 def get_db() -> Generator[Session, None, None]:
-    db = SessionLocal()
-    try:
+    with get_session() as db:
         yield db
-    finally:
-        db.close()
