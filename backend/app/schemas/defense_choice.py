@@ -5,6 +5,8 @@ class DefenseChoiceBase(BaseModel):
     text: str
     is_correct: bool = False
     feedback: str | None = None
+    prosecutor_response: str | None = None
+    judge_response: str | None = None
 
 
 class DefenseChoiceCreate(DefenseChoiceBase):

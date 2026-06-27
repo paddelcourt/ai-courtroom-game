@@ -11,3 +11,5 @@ class DefenseChoice(SQLModel, table=True):
     text: str
     is_correct: bool = Field(default=False)
     feedback: str | None = None
+    prosecutor_response: str | None = None
+    judge_response: str | None = None
