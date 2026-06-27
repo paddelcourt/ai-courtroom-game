@@ -11,7 +11,7 @@ class CaseCreate(CaseBase):
 
 
 class CaseRead(CaseBase):
-    id: int
+    id: str
     status: str
 
     model_config = ConfigDict(from_attributes=True)
