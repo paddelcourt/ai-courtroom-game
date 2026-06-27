@@ -2,25 +2,21 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session
 
 from app.api.deps import get_db
-from app.schemas.case import CaseCreate, CaseRead
-from app.services.case_service import create_case, get_case, list_cases
+from app.services.case_generation_service import generate_and_store_case
+from app.models.case import Case
+from app.schemas.case import CaseRead
 
 router = APIRouter()
 
 
-@router.get("", response_model=list[CaseRead])
-def read_cases(db: Session = Depends(get_db)) -> list[CaseRead]:
-    return list_cases(db)
+@router.post("/generate", response_model=CaseRead)
+def generate_case(db: Session = Depends(get_db), theme: str = "museum theft") -> Case:
+
+    result = generate_and_store_case(db, theme)
+    if not result:
+        raise HTTPException(status_code=400, detail="request failed")
+    return result
 
 
-@router.post("", response_model=CaseRead, status_code=status.HTTP_201_CREATED)
-def create_new_case(payload: CaseCreate, db: Session = Depends(get_db)) -> CaseRead:
-    return create_case(db, payload)
-
-
-@router.get("/{case_id}", response_model=CaseRead)
-def read_case(case_id: str, db: Session = Depends(get_db)) -> CaseRead:
-    case = get_case(db, case_id)
-    if case is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Case not found")
-    return case
+@router.get("/generate", response_model=CaseRead)
+def get_
