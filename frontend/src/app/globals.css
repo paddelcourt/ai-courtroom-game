@@ -1,102 +1,39 @@
-:root {
-  color-scheme: dark;
-  --background: #111111;
-  --foreground: #f5f1e8;
-  --muted: #a9a49a;
-  --panel: #1b1a18;
-  --border: #34312b;
-  --accent: #d7a84f;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-* {
-  box-sizing: border-box;
-}
+@layer base {
+  :root {
+    --background: 40 20% 96%;
+    --foreground: 28 14% 11%;
+    --card: 40 24% 98%;
+    --card-foreground: 28 14% 11%;
+    --primary: 214 74% 34%;
+    --primary-foreground: 40 24% 98%;
+    --secondary: 38 44% 88%;
+    --secondary-foreground: 28 14% 11%;
+    --muted: 36 20% 90%;
+    --muted-foreground: 30 9% 42%;
+    --accent: 184 35% 82%;
+    --accent-foreground: 28 14% 11%;
+    --destructive: 0 74% 42%;
+    --destructive-foreground: 40 24% 98%;
+    --border: 34 18% 80%;
+    --input: 34 18% 80%;
+    --ring: 214 74% 34%;
+    --radius: 0.5rem;
+  }
 
-html,
-body {
-  margin: 0;
-  min-height: 100%;
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+  * {
+    @apply border-border;
+  }
 
-button,
-input,
-textarea {
-  font: inherit;
-}
+  html {
+    @apply bg-background text-foreground;
+  }
 
-.shell {
-  width: min(1120px, calc(100% - 32px));
-  margin: 0 auto;
-  padding: 48px 0;
-}
-
-.hero {
-  padding: 48px 0 32px;
-  border-bottom: 1px solid var(--border);
-}
-
-.eyebrow {
-  margin: 0 0 12px;
-  color: var(--accent);
-  text-transform: uppercase;
-  font-size: 0.78rem;
-  letter-spacing: 0;
-  font-weight: 700;
-}
-
-h1 {
-  margin: 0;
-  font-size: clamp(2.5rem, 8vw, 5.5rem);
-  line-height: 0.95;
-}
-
-.lede {
-  max-width: 640px;
-  color: var(--muted);
-  font-size: 1.1rem;
-  line-height: 1.6;
-}
-
-.panel {
-  margin-top: 28px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--panel);
-}
-
-.panel-header,
-.case-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 18px 20px;
-}
-
-.panel-header {
-  border-bottom: 1px solid var(--border);
-}
-
-.case-row + .case-row {
-  border-top: 1px solid var(--border);
-}
-
-.case-title {
-  margin: 0 0 6px;
-  font-weight: 700;
-}
-
-.case-description,
-.empty-state {
-  margin: 0;
-  color: var(--muted);
-}
-
-.status {
-  flex: 0 0 auto;
-  color: var(--accent);
-  font-size: 0.88rem;
+  body {
+    @apply min-h-screen bg-background text-foreground antialiased;
+    font-family: Arial, Helvetica, sans-serif;
+  }
 }

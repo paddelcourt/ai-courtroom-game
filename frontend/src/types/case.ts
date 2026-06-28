@@ -1,5 +1,5 @@
 export type CaseFile = {
-  id: number;
+  id: string;
   title: string;
   description: string | null;
   status: string;
