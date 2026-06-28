@@ -49,6 +49,7 @@ Use this exact top-level shape:
 }
 
 Rules:
+- Make sure the description is descriptive and detailed to make the case feel alive and immerse the user in the case. The case should be similar to what you would expect in an ace attorney game.
 - Generate exactly one case.
 - Include exactly one judge, one prosecutor, one defendant, one defense attorney,
   and one witness.
@@ -69,6 +70,10 @@ Rules:
 - Make the case solvable, fair, and internally consistent.
 - Avoid graphic violence, sexual content, real people, real brands, and copyrighted
   character names.
+- Make the description immersive for the user, it should be in a style similar to ace attorney game.
+- Do not omit order_index.
+- Defense choice text should be a concise action. Do not start choices with "Object", "Objection", or speaker labels.
+
 """.strip()
 
 
