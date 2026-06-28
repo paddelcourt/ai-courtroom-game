@@ -1,6 +1,6 @@
 # AI Courtroom Game
 
-This is a project that simulates a Phoenix Wright Ace Attorney Game. <br />
+This is a project that simulates a Phoenix Wright Ace Attorney Game. Generate your own case and play as a defense attorney defending their client and cross examining witness testimony!<br />
 It uses FastAPI for backend, and React/Next.js for frontend with Shadcn components. Cases and related information are stored in a SQLite database. Uses AI Agent SDK from Vercel to power the app.
 
 ## Demo 
