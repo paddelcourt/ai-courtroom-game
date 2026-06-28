@@ -33,7 +33,9 @@ export default function Home() {
   const [selectedChoice, setSelectedChoice] = useState<DefenseChoice | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [currentCharacter, setCurrentCharacter] = useState<Character | null>(null);
-
+  const isFinished = testimony.length > 0 && currentTestimonyIndex >= testimony.length;
+  const wonTrial = isFinished && correctCount === testimony.length;
+  const [isMusicPanelOpen, setIsMusicPanelOpen] = useState(false);
   const currentTestimony = testimony[currentTestimonyIndex] ?? null;
 
   async function handleGenerateCase() {
@@ -93,10 +95,11 @@ export default function Home() {
       }
     }
 
-    function handleSelectChoice(choice: DefenseChoice) {
+    async function handleSelectChoice(choice: DefenseChoice) {
       if (selectedChoice) return;
 
         const sound = new Audio("/audio/objection-sound-effect.mp3");
+        sound.volume = 0.35;
         sound.play();
         if (audioRef.current) {
           audioRef.current.src = "/audio/objection-theme.mp3";
@@ -111,6 +114,28 @@ export default function Home() {
       setCorrectCount((count) => count + 1);
     }
     }
+
+    async function handleNextTestimony() {
+      const nextIndex = currentTestimonyIndex + 1;
+      const nextTestimony = testimony[nextIndex]
+      setSelectedChoice(null);
+      setCurrentTestimonyIndex(nextIndex)
+
+      if (nextTestimony) {
+        const nextChoices = await getTestimonyChoices(nextTestimony.id)
+        setChoices(nextChoices)
+
+        const character = await getCharacter(nextTestimony.character_id);
+        setCurrentCharacter(character);
+      }
+
+      else {
+        setChoices([]);
+        setCurrentCharacter(null);
+      }
+    }
+
+
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
@@ -143,30 +168,41 @@ export default function Home() {
             </div>
           ) : null}
         {caseFile ? (
-        
-        <div className="fixed bottom-4 right-4 z-50 w-64 rounded-md border bg-card p-3 shadow-lg">
-          <div className="mb-3 flex items-center justify-between gap-3">
-            <span className="text-sm font-medium">Music</span>
-            <Button size="sm" variant="secondary" onClick={handleToggleMusic}>
-              {isMusicPlaying ? "Pause" : "Play"}
-            </Button>
-          </div>
+            <div className="fixed bottom-4 right-4 z-50 rounded-md border bg-card p-3 shadow-lg">
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => setIsMusicPanelOpen((open) => !open)}
+              >
+                {isMusicPanelOpen ? "Hide music" : "Music"}
+              </Button>
 
-          <label className="block text-xs text-muted-foreground" htmlFor="music-volume">
-            Volume
-          </label>
-          <input
-            id="music-volume"
-            className="mt-2 w-full"
-            type="range"
-            min="0"
-            max="1"
-            step="0.05"
-            value={volume}
-            onChange={handleVolumeChange}
-          />
-        </div>
-      ) : null}
+              {isMusicPanelOpen ? (
+                <div className="mt-3 w-64">
+                  <div className="mb-3 flex items-center justify-between gap-3">
+                    <span className="text-sm font-medium">Music</span>
+                    <Button size="sm" variant="secondary" onClick={handleToggleMusic}>
+                      {isMusicPlaying ? "Pause" : "Play"}
+                    </Button>
+                  </div>
+
+                  <label className="block text-xs text-muted-foreground" htmlFor="music-volume">
+                    Volume
+                  </label>
+                  <input
+                    id="music-volume"
+                    className="mt-2 w-full"
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.05"
+                    value={volume}
+                    onChange={handleVolumeChange}
+                  />
+                </div>
+              ) : null}
+            </div>
+          ) : null}
         </CardContent>
       </Card>
 
@@ -218,25 +254,50 @@ export default function Home() {
           </div>
         </div>
       ) : null}
+        {selectedChoice ? (
+            <Button onClick={handleNextTestimony}>
+              {currentTestimonyIndex + 1 >= testimony.length
+                ? "Finish Trial"
+                : "Next Testimony"}
+            </Button>
+          ) : null}
       </div>
     </CardContent>
   </Card>
 ) : null}
 
       
-      {evidence.length > 0 ? (
-          <div className="rounded-md border p-4">
-            <h3 className="font-semibold">Evidence</h3>
-            <div className="mt-3 space-y-3">
-              {evidence.map((item) => (
-                <div key={item.id} className="rounded-md border p-3">
-                  <p className="font-medium">{item.name}</p>
-                  <p className="text-sm text-muted-foreground">{item.description}</p>
-                </div>
-              ))}
+    {evidence.length > 0 ? (
+            <div className="rounded-md border p-4">
+              <h3 className="font-semibold">Evidence</h3>
+              <div className="mt-3 space-y-3">
+                {evidence.map((item) => (
+                  <div key={item.id} className="rounded-md border p-3">
+                    <p className="font-medium">{item.name}</p>
+                    <p className="text-sm text-muted-foreground">{item.description}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        ) : null}
+          ) : null}
+
+    {isFinished ? (
+    <Card>
+      <CardHeader>
+        <CardTitle>{wonTrial ? "Not Guilty" : "Guilty"}</CardTitle>
+        <CardDescription>
+          {wonTrial
+            ? "You successfully defended your client."
+            : "The defense failed to resolve every contradiction."}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm text-muted-foreground">
+          You found {correctCount} out of {testimony.length} contradictions.
+        </p>
+      </CardContent>
+    </Card>
+  ) : null}
     </main>
   );
 }
