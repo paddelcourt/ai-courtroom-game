@@ -31,6 +31,7 @@ def case_generation(theme: str = "museum theft") -> dict:
                 "content": CASE_GENERATION_USER_PROMPT.format(theme=theme),
             },
         ],
+        text={"format": {"type": "json_object"}},
     )
 
     return json.loads(response.output_text)
