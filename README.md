@@ -1,6 +1,16 @@
 # AI Courtroom Game
 
-This is a project that simulates. It uses FastAPI for backend, and React/Next.js for frontend with Shadcn components. Cases and related information are stored in a database.
+This is a project that simulates a Phoenix Wright Ace Attorney Game. <br />
+It uses FastAPI for backend, and React/Next.js for frontend with Shadcn components. Cases and related information are stored in a SQLite database. Uses AI Agent SDK from Vercel to power the app.
+
+## Demo 
+[![AI Courtroom Game demo](https://img.youtube.com/vi/P8jSSm32L6s/maxresdefault.jpg)](https://youtu.be/P8jSSm32L6s)
+
+
+
+## Environment
+
+Set the model at AI_GATEWAY_MODEL i.e openai/gpt-4.1-mini
 
 ## Structure
 
@@ -8,9 +18,6 @@ This is a project that simulates. It uses FastAPI for backend, and React/Next.js
 backend/
   app/
     api/
-      cases.py
-      health.py
-      router.py
     core/
     db/
     models/
