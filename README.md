@@ -1,6 +1,6 @@
 # AI Courtroom Game
 
-Project scaffold with a FastAPI backend and Next.js frontend.
+This is a project that simulates. It uses FastAPI for backend, and React/Next.js for frontend with Shadcn components. Cases and related information are stored in a database.
 
 ## Structure
 
