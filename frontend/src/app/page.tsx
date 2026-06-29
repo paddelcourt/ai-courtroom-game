@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useRef, useState } from "react";
-import { generateCase, getCaseEvidence, getCaseTestimony, getTestimonyChoices, getCharacter } from "@/lib/api";
+import { generateCase, getCaseEvidence, getCaseTestimony, getTestimonyChoices, getCharacter, listCase } from "@/lib/api";
 import type { CaseFile } from "@/types/case";
 import type { Evidence } from "@/types/evidence";
 import type { DefenseChoice } from "@/types/defense-choice";
@@ -20,7 +20,9 @@ import type { Character } from "@/types/character";
 
 export default function Home() {
   const [theme, setTheme] = useState("museum theft")
+  const [caseFiles, setCaseFiles] = useState<CaseFile[]>([]);
   const [caseFile, setCaseFile] = useState<CaseFile | null>(null)
+  const [displayCases, setDisplayCases] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -135,7 +137,34 @@ export default function Home() {
       }
     }
 
+    async function handleSelectCase(selectedCase: CaseFile) {
+      setCaseFile(selectedCase);
 
+      const caseEvidence = await getCaseEvidence(selectedCase.id);
+      const caseTestimony = await getCaseTestimony(selectedCase.id);
+
+      setEvidence(caseEvidence);
+      setTestimony(caseTestimony);
+      setCurrentTestimonyIndex(0);
+      setSelectedChoice(null);
+      setCorrectCount(0);
+      setDisplayCases(false)
+
+      if (caseTestimony[0]) {
+        const defenseChoices = await getTestimonyChoices(caseTestimony[0].id);
+        setChoices(defenseChoices);
+
+        const character = await getCharacter(caseTestimony[0].character_id);
+        setCurrentCharacter(character);
+      }
+
+    }
+
+    async function handleLoadCases() {
+      const cases = await listCase();
+      setDisplayCases(true);
+      setCaseFiles(cases);
+  }
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
@@ -160,6 +189,27 @@ export default function Home() {
           </div>
 
         {error ? <p className="text-sm text-red-500">{error}</p> : null}
+
+        <Button variant="secondary" onClick={handleLoadCases}>
+          Load Past Cases
+        </Button>
+
+        {caseFiles.length > 0 && displayCases === true ?  (
+            <div className="rounded-md border p-4">
+              <h3 className="font-semibold">Cases</h3>
+              <div className="mt-3 space-y-3">
+                {caseFiles.map((item) => (
+                  <div key={item.id} className="rounded-md border p-3">
+                    <p className="font-medium">{item.title}</p>
+                    <p className="text-sm text-muted-foreground">{item.description}</p>
+                    <Button className="mt-3" variant="secondary" onClick={() => handleSelectCase(item)}>
+                    Play Case
+                  </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
 
         {caseFile ? (
             <div className="rounded-md border p-4">

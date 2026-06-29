@@ -71,3 +71,15 @@ export async function getCharacter(characterId: string): Promise<Character> {
   return response.json()
 }
 
+
+export async function listCase(): Promise<CaseFile[]> {
+    const response = await fetch(`${API_URL}/cases/`, {
+    method: "GET",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch cases")
+  }
+
+  return response.json()
+}
