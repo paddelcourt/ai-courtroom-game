@@ -150,6 +150,14 @@ export default function Home() {
       setCorrectCount(0);
       setDisplayCases(false)
 
+
+      if (audioRef.current) {
+          audioRef.current.src = "/audio/courtroom-theme.mp3";
+          audioRef.current.currentTime = 0;
+          audioRef.current.play().catch(() => {});
+          setIsMusicPlaying(true);
+      }
+
       if (caseTestimony[0]) {
         const defenseChoices = await getTestimonyChoices(caseTestimony[0].id);
         setChoices(defenseChoices);
